@@ -5,27 +5,8 @@ import com.sun.net.httpserver.HttpServer;
 import exception.InvalidInputException;
 import exception.PaymentFailureException;
 import exception.SeatUnavailableException;
-import model.Admin;
-import model.Booking;
-import model.Event;
-import model.User;
-import repository.BookingRepository;
-import repository.EventRepository;
-import repository.UserRepository;
-import service.AnalyticsService;
-import service.BookingService;
-import service.CardPayment;
-import service.DynamicPricingStrategy;
-import service.PaymentMethod;
-import service.PricingStrategy;
-import service.RecommendationService;
-import service.RefundService;
-import service.UpiPayment;
-import util.Validation;
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -43,6 +24,21 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import model.Admin;
+import model.Booking;
+import model.Event;
+import model.User;
+import repository.BookingRepository;
+import repository.EventRepository;
+import repository.UserRepository;
+import service.AnalyticsService;
+import service.BookingService;
+import service.DynamicPricingStrategy;
+import service.PaymentMethod;
+import service.PricingStrategy;
+import service.RecommendationService;
+import service.RefundService;
+import util.Validation;
 
 /**
  * Web layer for the Smart Event Booking System.
@@ -99,7 +95,8 @@ public class WebServer {
         }
 
         // Loopback only: passwords travel over plain HTTP, so keep it on this machine.
-        HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), port), 0);
+        HttpServer server = HttpServer.create(
+    new InetSocketAddress("0.0.0.0", port), 0);
         server.createContext("/api/", this::handleApi);
         server.createContext("/", this::handleStatic);
         server.setExecutor(Executors.newFixedThreadPool(8));
