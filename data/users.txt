@@ -1,0 +1,7 @@
+1000|System Admin|admin@events.com|c63bc483|HQ|General|0|ADMIN
+1001|LOGAPRIYA K|kklogapriyakumaran20@gmail.com|a6e34ec|chennai|Music,Sports,Dance|0|USER
+1002|LOGAPRIYA|123@gmail.com|910e0084|chennai|Music,Sports|3|USER
+1003|Aarthy Test|aarthy.test@example.com|53ab39b7|Chennai|Tech|0|USER
+1004|Aarthy Test|aarthy.new@example.com|53ab39b7|Chennai|Tech|0|USER
+1005|Test Attendee|testuser9944@example.com|53ab39b7|Chennai|Tech|12|USER
+1006|AARTHY C|aarthyc.aiml2025@citchennai.net|170842|Chennai|Comedy|9|USER

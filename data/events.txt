@@ -1,0 +1,13 @@
+1|Indie Music Night|Music|Chennai|2026-10-17|800.0|120|120
+2|DevConf 2026|Tech|Bengaluru|2026-10-25|1500.0|300|300
+3|City Marathon|Sports|Mumbai|2026-11-09|500.0|500|500
+4|Street Food Carnival|Food|Hyderabad|2026-10-14|300.0|200|200
+5|Zumba Dance Fitness Class|Fitness|Chennai|2026-10-09|250.0|40|7
+6|Sunrise Yoga & Meditation|Fitness|Coimbatore|2026-10-11|200.0|60|60
+7|Startup Weekend Hackathon|Tech|Chennai|2026-10-30|600.0|150|148
+8|Modern Art Exhibition|Art|Mumbai|2026-10-20|350.0|100|100
+9|Classical Dance Recital|Dance|Chennai|2026-10-23|450.0|80|80
+10|Kids Science Carnival|Kids|Bengaluru|2026-10-15|300.0|120|120
+11|Wine & Cheese Tasting Evening|Food|Goa|2026-10-27|1200.0|50|50
+12|Open Mic Poetry Night|Comedy|Pune|2026-10-12|150.0|35|35
+13|Standup Comedy Live|Comedy|Chennai|2026-10-10|700.0|20|2

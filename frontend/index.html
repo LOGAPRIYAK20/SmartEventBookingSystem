@@ -1,0 +1,1457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartEvent – Book. Pass. Enjoy.</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0d4f3c;
+      --primary-light: #1a7a5e;
+      --accent: #f5a623;
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --muted: #718096;
+      --danger: #e53e3e;
+      --success: #38a169;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: var(--primary); text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; border: none; }
+    input, select, textarea { font-family: inherit; }
+    img { max-width: 100%; }
+
+    /* ===== TOPBAR ===== */
+    .topbar {
+      background: var(--primary);
+      color: #fff;
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .topbar-logo { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+    .topbar-logo span { color: var(--accent); }
+    .topbar-nav { display: flex; gap: 0.25rem; align-items: center; }
+    .topbar-nav a {
+      color: rgba(255,255,255,0.85);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .topbar-nav a:hover, .topbar-nav a[aria-current] { color: #fff; background: rgba(255,255,255,0.15); }
+    .topbar-user { display: flex; align-items: center; gap: 0.75rem; }
+    .topbar-user-name { color: rgba(255,255,255,0.9); font-size: 0.875rem; font-weight: 500; }
+    .topbar-user .logout-btn {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .topbar-user .logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ===== MAIN ===== */
+    #app { min-height: calc(100vh - 60px); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .page-head { margin-bottom: 2rem; }
+    .page-head h1 { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+    .page-head p { color: var(--muted); margin-top: 0.25rem; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 5rem 1.5rem;
+      text-align: center;
+    }
+    .hero h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; line-height: 1.2; margin-bottom: 1rem; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto 2rem; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-features { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+    .hero-feature { text-align: center; }
+    .hero-feature .icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    .hero-feature p { font-size: 0.85rem; opacity: 0.8; }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #1a202c;
+      transition: all 0.2s;
+      border: none;
+      white-space: nowrap;
+    }
+    .btn:hover { background: #e09518; transform: translateY(-1px); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-light); }
+    .btn-outline { background: transparent; border: 2px solid currentColor; }
+    .btn-outline:hover { background: rgba(0,0,0,0.05); }
+    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.8rem; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #c53030; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn[disabled] { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-body { padding: 1.5rem; }
+    .card-foot { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: #fafafa; display: flex; gap: 0.5rem; align-items: center; }
+
+    /* ===== GRID ===== */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+    .grid-4 { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+    /* ===== STAT CARDS ===== */
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .stat-card .label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+    .stat-card .value { font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-top: 0.25rem; }
+    .stat-card .sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* ===== FORMS ===== */
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .error-box { background: #fff5f5; border: 1px solid #feb2b2; color: var(--danger); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem; }
+    .success-box { background: #f0fff4; border: 1px solid #9ae6b4; color: var(--success); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem; }
+
+    /* ===== AUTH PAGE ===== */
+    .auth-wrap { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; background: var(--bg); }
+    .auth-card { width: 100%; max-width: 440px; }
+    .auth-card .card-body { padding: 2.5rem; }
+    .auth-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 0.25rem; }
+    .auth-sub { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.75rem; }
+    .auth-link { text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--muted); }
+    .auth-link a { color: var(--primary); font-weight: 600; }
+
+    /* ===== EVENT CARDS ===== */
+    .event-card .event-head {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      padding: 1.5rem;
+    }
+    .event-card .event-cat {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255,255,255,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    .event-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .event-card .event-meta { font-size: 0.82rem; opacity: 0.85; }
+    .event-card .event-price { margin-top: 0.5rem; font-size: 1.1rem; font-weight: 800; }
+    .event-card .event-seats { font-size: 0.8rem; opacity: 0.8; }
+    .low-seats { color: var(--accent) !important; font-weight: 700; }
+
+    /* ===== SEAT MAP ===== */
+    .seat-map-wrap { background: var(--surface); border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--border); }
+    .screen-label { text-align: center; background: #e2e8f0; padding: 0.5rem 2rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 auto 1.5rem; display: block; max-width: 200px; }
+    .seat-rows { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+    .seat-row { display: flex; gap: 0.5rem; align-items: center; }
+    .seat-row-label { width: 20px; text-align: right; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+    .seat {
+      width: 36px; height: 36px;
+      border-radius: 6px 6px 3px 3px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .seat.available { background: #e2e8f0; color: var(--muted); }
+    .seat.available:hover { background: var(--primary-light); color: #fff; }
+    .seat.selected { background: var(--primary); color: #fff; }
+    .seat.booked { background: #feb2b2; color: var(--danger); cursor: not-allowed; }
+    .seat.locked { background: #fbd38d; color: #744210; cursor: not-allowed; }
+    .seat-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; justify-content: center; }
+    .seat-legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; color: var(--muted); }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+
+    /* ===== BOOKING SUMMARY ===== */
+    .booking-summary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .booking-summary h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--primary); }
+    .price-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 0.3rem 0; }
+    .price-row.total { font-weight: 800; font-size: 1rem; border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; color: var(--primary); }
+    .price-row .muted { color: var(--muted); }
+
+    /* ===== SENTRY PASS CARD ===== */
+    .sentry-pass {
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .sentry-pass-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 1.75rem;
+      text-align: center;
+    }
+    .sentry-pass-brand { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; }
+    .sentry-pass-title { font-size: 1.3rem; font-weight: 900; color: var(--accent); margin: 0.25rem 0; }
+    .sentry-pass-event { font-size: 1rem; font-weight: 700; margin-top: 0.5rem; }
+    .sentry-pass-meta-bar { font-size: 0.8rem; opacity: 0.85; margin-top: 0.25rem; }
+    .sentry-pass-qr {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 2px dashed var(--border);
+    }
+    .sentry-pass-qr svg { width: 160px; height: 160px; }
+    .sentry-pass-qr .qr-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.5rem; font-family: monospace; letter-spacing: 0.05em; }
+    .sentry-pass-details {
+      padding: 1rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1rem;
+    }
+    .sentry-pass-detail .dt { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
+    .sentry-pass-detail .dd { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-top: 0.1rem; }
+    .sentry-pass-footer {
+      background: #f7fafc;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-badge.ACTIVE { background: #c6f6d5; color: #22543d; }
+    .status-badge.USED { background: #e2e8f0; color: #4a5568; }
+    .status-badge.CANCELLED { background: #fed7d7; color: #822727; }
+    .status-badge.EXPIRED { background: #feebc8; color: #744210; }
+    .sentry-pass-hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; }
+
+    /* ===== PASS LIST CARDS ===== */
+    .pass-list-card {
+      position: relative;
+      border-left: 4px solid var(--primary);
+    }
+    .pass-list-card.USED { border-left-color: var(--muted); }
+    .pass-list-card.CANCELLED { border-left-color: var(--danger); }
+    .pass-list-card.EXPIRED { border-left-color: var(--accent); }
+    .pass-list-card .pass-event { font-size: 1rem; font-weight: 700; }
+    .pass-list-card .pass-info { font-size: 0.82rem; color: var(--muted); margin: 0.3rem 0 0.75rem; }
+
+    /* ===== ADMIN CHECK-IN ===== */
+    .checkin-box { max-width: 500px; margin: 3rem auto; }
+    .checkin-result {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      text-align: center;
+      display: none;
+    }
+    .checkin-result.show { display: block; }
+    .checkin-result.approved { background: #f0fff4; border: 2px solid var(--success); }
+    .checkin-result.denied { background: #fff5f5; border: 2px solid var(--danger); }
+    .checkin-icon { font-size: 3rem; }
+    .checkin-verdict { font-size: 1.4rem; font-weight: 900; margin: 0.5rem 0; }
+    .checkin-result.approved .checkin-verdict { color: var(--success); }
+    .checkin-result.denied .checkin-verdict { color: var(--danger); }
+    .checkin-detail { font-size: 0.88rem; color: var(--muted); margin-top: 0.75rem; text-align: left; display: inline-block; }
+
+    /* ===== BOOKING CARDS ===== */
+    .booking-card-status { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+    .booking-card-status.CONFIRMED { background: #c6f6d5; color: #22543d; }
+    .booking-card-status.CANCELLED { background: #fed7d7; color: #822727; }
+    .booking-card-status.WAITLISTED { background: #feebc8; color: #744210; }
+
+    /* ===== SUCCESS PAGE ===== */
+    .success-page { text-align: center; padding: 4rem 1rem; max-width: 500px; margin: 0 auto; }
+    .success-icon { font-size: 4rem; color: var(--success); }
+    .success-page h1 { font-size: 2rem; font-weight: 900; color: var(--primary); margin: 0.75rem 0 0.5rem; }
+    .success-checks { list-style: none; margin: 1rem auto; text-align: left; display: inline-block; }
+    .success-checks li { padding: 0.3rem 0; font-size: 0.95rem; color: var(--text); }
+    .success-checks li::before { content: '✓ '; color: var(--success); font-weight: 700; }
+    .success-ids { background: var(--bg); border-radius: 8px; padding: 1rem 1.5rem; margin: 1rem 0; display: inline-block; text-align: left; min-width: 280px; }
+    .success-ids p { font-size: 0.85rem; color: var(--muted); }
+    .success-ids p strong { color: var(--text); font-weight: 700; }
+    .success-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+
+    /* ===== DIALOG ===== */
+    dialog {
+      border: none;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      padding: 0;
+      width: min(90vw, 520px);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    dialog::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
+    .dlg-wrap { display: flex; flex-direction: column; }
+    .dlg-head { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .dlg-head h2 { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+    .dlg-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0.25rem; }
+    .dlg-close:hover { color: var(--text); }
+    .dlg-body { padding: 1.5rem; }
+    .dlg-foot { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; justify-content: flex-end; }
+
+    /* ===== TOAST ===== */
+    #toasts { position: fixed; bottom: 1.5rem; right: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 9999; }
+    .toast {
+      background: #1a202c;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-lg);
+      max-width: 320px;
+      animation: slideIn 0.2s ease;
+    }
+    .toast.error { background: var(--danger); }
+    .toast.success-t { background: var(--success); }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* ===== PAYMENT METHOD SELECTOR ===== */
+    .pay-method { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .pay-option {
+      flex: 1;
+      min-width: 100px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      background: #fff;
+    }
+    .pay-option:hover { border-color: var(--primary); }
+    .pay-option.selected { border-color: var(--primary); background: #e6f0ec; }
+    .pay-option .pay-icon { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
+    .pay-option .pay-label { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+
+    /* ===== DASHBOARD ===== */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      padding: 2rem 1.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+    }
+    .welcome-banner h2 { font-size: 1.6rem; font-weight: 800; }
+    .welcome-banner p { opacity: 0.85; margin-top: 0.25rem; }
+    .welcome-banner .points { background: var(--accent); color: #1a202c; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem; border-radius: 99px; font-size: 0.82rem; font-weight: 700; margin-top: 0.75rem; }
+    .section-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; }
+    .quick-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .quick-action-btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .quick-action-btn:hover { border-color: var(--primary); background: #e6f0ec; transform: translateY(-2px); }
+    .quick-action-btn .qa-icon { font-size: 1.75rem; display: block; margin-bottom: 0.4rem; }
+    .quick-action-btn .qa-label { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+
+    /* ===== ANALYTICS ===== */
+    .analytics-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .analytics-table th { background: #f7fafc; color: var(--muted); text-align: left; padding: 0.65rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+    .analytics-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+    .analytics-table tr:hover td { background: #f7fafc; }
+    .progress-bar { height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; margin-top: 4px; }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 99px; }
+
+    /* ===== FILTER BAR ===== */
+    .filter-bar { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .filter-bar input, .filter-bar select {
+      padding: 0.55rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      outline: none;
+      background: var(--surface);
+      flex: 1;
+      min-width: 140px;
+    }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary); }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .empty-state .empty-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+    .empty-state h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+    .empty-state p { font-size: 0.875rem; }
+
+    /* ===== TABS ===== */
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+    .tab-btn { padding: 0.65rem 1.25rem; font-size: 0.875rem; font-weight: 600; background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* ===== MISC ===== */
+    .mt { margin-top: 1rem; }
+    .mb { margin-bottom: 1rem; }
+    .text-muted { color: var(--muted); font-size: 0.875rem; }
+    .text-center { text-align: center; }
+    hr.dashed { border: none; border-top: 2px dashed var(--border); margin: 1rem 0; }
+    .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-center { display: flex; align-items: center; justify-content: center; padding: 4rem; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .topbar-nav { display: none; }
+      .hero { padding: 3rem 1rem; }
+      .hero h1 { font-size: 1.8rem; }
+      .sentry-pass-details { grid-template-columns: 1fr; }
+      .analytics-table { font-size: 0.75rem; }
+      .analytics-table td, .analytics-table th { padding: 0.5rem; }
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      .topbar, .no-print, #toasts { display: none !important; }
+      body { background: #fff; }
+      .sentry-pass { box-shadow: none; border: 2px solid #ccc; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" id="topbar"></header>
+  <main id="app" tabindex="-1"></main>
+  <dialog id="dlg" aria-labelledby="dlg-title"></dialog>
+  <div id="toasts" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const API = "/api";
+  const $app = document.getElementById("app");
+  const $top = document.getElementById("topbar");
+  const $dlg = document.getElementById("dlg");
+  const $toasts = document.getElementById("toasts");
+
+  // ── Session ──────────────────────────────────────────────
+  const Session = {
+    get token() { return localStorage.getItem("se_token") || null; },
+    get user()  { try { return JSON.parse(localStorage.getItem("se_user")); } catch { return null; } },
+    set(token, user) { localStorage.setItem("se_token", token); localStorage.setItem("se_user", JSON.stringify(user)); },
+    refresh(user) { localStorage.setItem("se_user", JSON.stringify(user)); },
+    clear() { localStorage.removeItem("se_token"); localStorage.removeItem("se_user"); },
+  };
+
+  // ── API helper ────────────────────────────────────────────
+  async function api(method, path, body) {
+    const headers = { "Content-Type": "application/json" };
+    if (Session.token) headers.Authorization = "Bearer " + Session.token;
+    let res;
+    try {
+      res = await fetch(API + path, { method, headers, body: body !== undefined ? JSON.stringify(body) : undefined });
+    } catch {
+      throw { message: "Cannot reach server. Is it running?" };
+    }
+    let data = null;
+    try { data = await res.json(); } catch {}
+    if (!res.ok) {
+      if (res.status === 401 && Session.token) { Session.clear(); renderTopbar([]); }
+      throw data || { message: "Something went wrong." };
+    }
+    return data;
+  }
+
+  // ── DOM helpers ───────────────────────────────────────────
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null || v === false) continue;
+      if (k === "html") el.innerHTML = v;
+      else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+      else if (k === "class") el.className = v;
+      else el.setAttribute(k, v === true ? "" : v);
+    }
+    for (const kid of kids.flat()) {
+      if (kid == null || kid === false) continue;
+      el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    }
+    return el;
+  }
+
+  const Rs = n => "₹" + Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  const errMsg = e => (e && e.message) ? e.message : "Something went wrong.";
+
+  function toast(msg, type) {
+    const t = h("div", { class: "toast" + (type ? " " + type : "") }, msg);
+    $toasts.append(t);
+    setTimeout(() => { t.style.opacity = "0"; t.style.transition = "opacity .25s"; setTimeout(() => t.remove(), 250); }, 3400);
+  }
+
+  function loading() { return h("div", { class: "loading-center" }, h("div", { class: "spinner" })); }
+
+  // ── Router ────────────────────────────────────────────────
+  const routes = [];
+  function route(pat, fn) { routes.push({ pat, fn }); }
+  function go(path) { location.hash = "#" + path; }
+
+  function parseHash() {
+    let raw = location.hash.slice(1) || "/";
+    const [pp, qp] = raw.split("?");
+    const segs = pp.split("/").filter(Boolean);
+    const query = {};
+    if (qp) for (const p of qp.split("&")) { const [k, v] = p.split("="); if (k) query[decodeURIComponent(k)] = decodeURIComponent(v || ""); }
+    return { segs, query };
+  }
+
+  function matchRoute(pat, segs) {
+    const ps = pat.split("/").filter(Boolean);
+    if (ps.length !== segs.length) return null;
+    const params = {};
+    for (let i = 0; i < ps.length; i++) {
+      if (ps[i].startsWith(":")) params[ps[i].slice(1)] = segs[i];
+      else if (ps[i] !== segs[i]) return null;
+    }
+    return params;
+  }
+
+  async function render() {
+    const { segs, query } = parseHash();
+    renderTopbar(segs);
+    $app.innerHTML = "";
+    let matched = false;
+    for (const { pat, fn } of routes) {
+      const params = matchRoute(pat, segs);
+      if (params !== null) { await fn({ params, query }); matched = true; break; }
+    }
+    if (!matched) $app.append(h("div", { class: "wrap" }, h("p", { class: "mt" }, "Page not found.")));
+  }
+
+  window.addEventListener("hashchange", render);
+  window.addEventListener("DOMContentLoaded", () => { if (!location.hash || location.hash === "#") location.hash = "#/"; render(); });
+  if (document.readyState !== "loading") { if (!location.hash || location.hash === "#") location.hash = "#/"; render(); }
+
+  // ── Topbar ────────────────────────────────────────────────
+  function renderTopbar(segs) {
+    const user = Session.user;
+    const cur = segs[0] || "";
+    const nl = (path, label, key) =>
+      h("a", { href: "#" + path, "aria-current": (cur === key || (key === "" && cur === "")) ? "page" : null }, label);
+    const nav = [];
+    if (user?.role === "ADMIN") {
+      nav.push(nl("/admin", "Dashboard", "admin"), nl("/admin/events", "Events", "admin"), nl("/admin/analytics", "Analytics", "analytics"), nl("/admin/checkin", "Check-In", "checkin"));
+    } else {
+      nav.push(nl("/", "Home", ""));
+      if (user) nav.push(nl("/events", "Events", "events"), nl("/bookings", "My Bookings", "bookings"), nl("/passes", "My Passes", "passes"));
+      else nav.push(nl("/events", "Events", "events"));
+    }
+    const userPart = user
+      ? h("div", { class: "topbar-user" },
+          h("span", { class: "topbar-user-name" }, user.name),
+          h("button", { class: "logout-btn", onclick: async () => { await api("POST", "/logout").catch(() => {}); Session.clear(); go("/"); } }, "Logout")
+        )
+      : h("div", { class: "topbar-user" },
+          h("a", { href: "#/login", class: "btn btn-sm", style: "color:#1a202c" }, "Login"),
+          h("a", { href: "#/register", class: "btn btn-sm btn-outline", style: "color:#fff;border-color:#fff" }, "Register")
+        );
+    $top.replaceChildren(
+      h("a", { class: "topbar-logo", href: "#/" }, "Smart", h("span", {}, "Event")),
+      h("nav", { class: "topbar-nav" }, ...nav),
+      userPart
+    );
+  }
+
+  function requireAuth() { if (!Session.user) { go("/login"); return false; } return true; }
+
+  // ── QR generator (pure JS) ────────────────────────────────
+  function qrSvg(code) {
+    if (!code) return '<svg width="160" height="160" viewBox="0 0 160 160"><rect width="160" height="160" fill="#eee"/><text x="80" y="88" text-anchor="middle" font-size="11" fill="#666">QR Unavailable</text></svg>';
+    const seed = [...code].reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 0);
+    let cells = "";
+    const S = 5, N = 29, OFF = (160 - N * S) / 2;
+    for (let r = 0; r < N; r++) for (let c2 = 0; c2 < N; c2++) {
+      const v = ((seed >> ((r * 29 + c2) % 29)) ^ (r * 7 + c2 * 13)) & 1;
+      if (v) cells += `<rect x="${OFF + c2 * S}" y="${OFF + r * S}" width="${S}" height="${S}" fill="#0d4f3c"/>`;
+    }
+    const finder = (x, y) => `<rect x="${x}" y="${y}" width="35" height="35" rx="3" fill="#0d4f3c"/><rect x="${x + 5}" y="${y + 5}" width="25" height="25" fill="#fff"/><rect x="${x + 10}" y="${y + 10}" width="15" height="15" rx="2" fill="#0d4f3c"/>`;
+    return `<svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="160" height="160" fill="#fff"/>${cells}
+      ${finder(7, 7)}${finder(118, 7)}${finder(7, 118)}
+    </svg>`;
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // ROUTES
+  // ══════════════════════════════════════════════════════════
+
+  // ── Landing page ─────────────────────────────────────────
+  route("/", () => {
+    if (Session.user) { go(Session.user.role === "ADMIN" ? "/admin" : "/dashboard"); return; }
+    $app.append(
+      h("div", { class: "hero" },
+        h("h1", {}, "Book Your Event. Get Your ", h("span", {}, "Pass."), " Enjoy."),
+        h("p", {}, "A smart, secure event booking platform with Digital Sentry Pass verification."),
+        h("div", { class: "hero-btns" },
+          h("a", { href: "#/events", class: "btn" }, "🎟 Explore Events"),
+          h("a", { href: "#/login", class: "btn btn-primary" }, "Login")
+        ),
+        h("div", { class: "hero-features" },
+          ...[ ["🎟", "Easy Booking", "Book seats in seconds"],
+               ["💺", "Smart Seats", "AI seat recommendations"],
+               ["💳", "Secure Payment", "UPI, Card, NetBanking"],
+               ["🎫", "Sentry Pass", "Digital QR entry pass"] ]
+          .map(([icon, title, sub]) => h("div", { class: "hero-feature" },
+            h("span", { class: "icon" }, icon),
+            h("strong", { style: "display:block;color:#fff;font-size:.9rem" }, title),
+            h("p", {}, sub)
+          ))
+        )
+      )
+    );
+  });
+
+  // ── Login ─────────────────────────────────────────────────
+  route("/login", () => {
+    if (Session.user) { go("/dashboard"); return; }
+    const errBox = h("div", { class: "error-box", style: "display:none" });
+    const emailInput = h("input", { type: "email", placeholder: "you@example.com", required: true });
+    const passInput  = h("input", { type: "password", placeholder: "Password", required: true });
+    const submitBtn  = h("button", { type: "submit", class: "btn btn-primary", style: "width:100%" }, "Login");
+    const form = h("form", {
+      onsubmit: async e => {
+        e.preventDefault();
+        errBox.style.display = "none";
+        submitBtn.disabled = true; submitBtn.textContent = "Logging in…";
+        try {
+          const data = await api("POST", "/login", { email: emailInput.value.trim(), password: passInput.value });
+          Session.set(data.token, data.user);
+          go(data.user.role === "ADMIN" ? "/admin" : "/dashboard");
+        } catch (err) {
+          errBox.textContent = errMsg(err); errBox.style.display = "block";
+          submitBtn.disabled = false; submitBtn.textContent = "Login";
+        }
+      }
+    },
+      errBox,
+      h("div", { class: "form-group" }, h("label", {}, "Email"), emailInput),
+      h("div", { class: "form-group" }, h("label", {}, "Password"), passInput),
+      submitBtn
+    );
+    $app.append(h("div", { class: "auth-wrap" }, h("div", { class: "auth-card card" },
+      h("div", { class: "card-body" },
+        h("div", { class: "auth-title" }, "Welcome back 👋"),
+        h("div", { class: "auth-sub" }, "Sign in to continue booking events"),
+        form,
+        h("p", { class: "auth-link" }, "Don't have an account? ", h("a", { href: "#/register" }, "Create one"))
+      )
+    )));
+  });
+
+  // ── Register ──────────────────────────────────────────────
+  route("/register", () => {
+    if (Session.user) { go("/dashboard"); return; }
+    const errBox = h("div", { class: "error-box", style: "display:none" });
+    const fields = {
+      name:     h("input", { type: "text",     placeholder: "Full Name",       required: true }),
+      email:    h("input", { type: "email",    placeholder: "Email",            required: true }),
+      phone:    h("input", { type: "tel",      placeholder: "Phone number",     required: true }),
+      password: h("input", { type: "password", placeholder: "Password",         required: true }),
+      confirm:  h("input", { type: "password", placeholder: "Confirm Password", required: true }),
+      city:     h("input", { type: "text",     placeholder: "Your city",        required: true }),
+      category: (() => {
+        const s = h("select", { required: true });
+        s.append(h("option", { value: "" }, "-- Preferred Category --"));
+        for (const c of ["Music", "Sports", "Tech", "Comedy", "Dance", "Art", "Fitness", "Other"])
+          s.append(h("option", { value: c }, c));
+        return s;
+      })()
+    };
+    const submitBtn = h("button", { type: "submit", class: "btn btn-primary", style: "width:100%" }, "Create Account");
+    const form = h("form", {
+      onsubmit: async e => {
+        e.preventDefault();
+        errBox.style.display = "none";
+        if (fields.password.value !== fields.confirm.value) { errBox.textContent = "Passwords do not match."; errBox.style.display = "block"; return; }
+        if (fields.password.value.length < 4) { errBox.textContent = "Password must be at least 4 characters."; errBox.style.display = "block"; return; }
+        submitBtn.disabled = true; submitBtn.textContent = "Creating account…";
+        try {
+          const data = await api("POST", "/register", {
+            name: fields.name.value.trim(),
+            email: fields.email.value.trim(),
+            phone: fields.phone.value.trim(),
+            password: fields.password.value,
+            city: fields.city.value.trim(),
+            preferredCategory: fields.category.value
+          });
+          Session.set(data.token, data.user);
+          toast("Account created! Welcome.", "success-t");
+          go("/dashboard");
+        } catch (err) {
+          errBox.textContent = errMsg(err); errBox.style.display = "block";
+          submitBtn.disabled = false; submitBtn.textContent = "Create Account";
+        }
+      }
+    },
+      errBox,
+      h("div", { class: "form-group" }, h("label", {}, "Full Name"), fields.name),
+      h("div", { class: "form-row" },
+        h("div", { class: "form-group" }, h("label", {}, "Email"), fields.email),
+        h("div", { class: "form-group" }, h("label", {}, "Phone"), fields.phone)
+      ),
+      h("div", { class: "form-row" },
+        h("div", { class: "form-group" }, h("label", {}, "Password"), fields.password),
+        h("div", { class: "form-group" }, h("label", {}, "Confirm"), fields.confirm)
+      ),
+      h("div", { class: "form-row" },
+        h("div", { class: "form-group" }, h("label", {}, "City"), fields.city),
+        h("div", { class: "form-group" }, h("label", {}, "Category"), fields.category)
+      ),
+      submitBtn
+    );
+    $app.append(h("div", { class: "auth-wrap" }, h("div", { class: "auth-card card" },
+      h("div", { class: "card-body" },
+        h("div", { class: "auth-title" }, "Create Account"),
+        h("div", { class: "auth-sub" }, "Join thousands of event-goers"),
+        form,
+        h("p", { class: "auth-link" }, "Already have an account? ", h("a", { href: "#/login" }, "Login"))
+      )
+    )));
+  });
+
+  // ── Dashboard ─────────────────────────────────────────────
+  route("/dashboard", async () => {
+    if (!requireAuth()) return;
+    const user = Session.user;
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "welcome-banner" },
+      h("h2", {}, "Welcome, " + user.name + " 👋"),
+      h("p", {}, "Ready to explore amazing events?"),
+      h("span", { class: "points" }, "⭐ " + (user.loyaltyPoints || 0) + " Loyalty Points")
+    ));
+    wrap.append(
+      h("div", { class: "section-title" }, "Quick Actions"),
+      h("div", { class: "quick-actions" },
+        ...[["/events", "🎟", "Browse Events"], ["/bookings", "📋", "My Bookings"], ["/passes", "🎫", "My Passes"]]
+          .map(([path, icon, label]) => h("button", { class: "quick-action-btn", onclick: () => go(path) },
+            h("span", { class: "qa-icon" }, icon), h("span", { class: "qa-label" }, label)
+          ))
+      )
+    );
+    const recDiv = h("div", { class: "grid" }, loading());
+    wrap.append(h("div", { class: "section-title mt" }, "Recommended For You"), recDiv);
+    try {
+      const recs = await api("GET", "/events/recommended");
+      recDiv.replaceChildren();
+      if (!recs || recs.length === 0) recDiv.append(h("p", { class: "text-muted" }, "No recommendations yet — book some events!"));
+      else recs.slice(0, 4).forEach(e => recDiv.append(eventCard(e, true)));
+    } catch { recDiv.replaceChildren(h("p", { class: "text-muted" }, "Could not load recommendations.")); }
+  });
+
+  // ── Events list ───────────────────────────────────────────
+  route("/events", async () => {
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "page-head" }, h("h1", {}, "Upcoming Events"), h("p", {}, "Browse and book your next experience")));
+
+    let allEvents = [];
+    const searchI = h("input",  { type: "text",  placeholder: "Search events…" });
+    const cityI   = h("input",  { type: "text",  placeholder: "City…" });
+    const catSel  = (() => {
+      const s = h("select");
+      s.append(h("option", { value: "" }, "All Categories"));
+      for (const c of ["Music", "Sports", "Tech", "Comedy", "Dance", "Art", "Fitness", "Other"])
+        s.append(h("option", { value: c }, c));
+      return s;
+    })();
+    const sortSel = (() => {
+      const s = h("select");
+      [["date", "Sort: Date"], ["price", "Sort: Price"], ["seats", "Sort: Seats"]].forEach(([v, l]) => s.append(h("option", { value: v }, l)));
+      return s;
+    })();
+    const grid = h("div", { class: "grid" }, loading());
+
+    const filterAndRender = () => {
+      const q = searchI.value.toLowerCase(), city = cityI.value.toLowerCase(), cat = catSel.value, sort = sortSel.value;
+      let list = allEvents.filter(e =>
+        (!q || e.name.toLowerCase().includes(q) || e.location.toLowerCase().includes(q)) &&
+        (!city || e.location.toLowerCase().includes(city)) &&
+        (!cat || e.category === cat)
+      );
+      list.sort((a, b) => sort === "price" ? a.basePrice - b.basePrice : sort === "seats" ? b.availableSeats - a.availableSeats : a.date.localeCompare(b.date));
+      grid.replaceChildren();
+      if (list.length === 0) grid.append(h("div", { class: "empty-state" }, h("span", { class: "empty-icon" }, "🎟"), h("h3", {}, "No events found"), h("p", {}, "Try different search terms")));
+      else list.forEach(e => grid.append(eventCard(e)));
+    };
+
+    [searchI, cityI, catSel, sortSel].forEach(el => el.addEventListener("input", filterAndRender));
+    wrap.append(h("div", { class: "filter-bar" }, searchI, cityI, catSel, sortSel), grid);
+
+    try {
+      allEvents = await api("GET", "/events");
+      filterAndRender();
+    } catch (err) { grid.replaceChildren(h("p", { class: "text-muted" }, errMsg(err))); }
+  });
+
+  function eventCard(e, isRec) {
+    const low = e.availableSeats > 0 && e.availableSeats <= 15;
+    return h("div", { class: "card event-card" },
+      h("div", { class: "event-head" },
+        h("span", { class: "event-cat" }, e.category),
+        h("h3", {}, e.name),
+        h("p", { class: "event-meta" }, "📅 " + e.date + "  📍 " + e.location),
+        h("div", { class: "event-price" }, "₹" + Number(e.basePrice).toLocaleString("en-IN")),
+        h("div", { class: "event-seats" + (low ? " low-seats" : "") }, e.availableSeats + " seats left" + (low ? " 🔥" : ""))
+      ),
+      h("div", { class: "card-foot" },
+        h("button", { class: "btn btn-sm btn-primary", onclick: () => go("/events/" + e.id) }, "View Details"),
+        isRec && e.reasons && e.reasons[0] ? h("span", { class: "text-muted", style: "font-size:.75rem" }, e.reasons[0]) : null
+      )
+    );
+  }
+
+  // ── Event details ─────────────────────────────────────────
+  route("/events/:id", async ({ params }) => {
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(loading());
+    try {
+      const e = await api("GET", "/events/" + params.id);
+      wrap.replaceChildren();
+      const low = e.availableSeats > 0 && e.availableSeats <= 15;
+      const soldOut = e.availableSeats === 0;
+      wrap.append(
+        h("div", { class: "card", style: "margin-bottom:1.5rem" },
+          h("div", { class: "event-head" },
+            h("span", { class: "event-cat" }, e.category),
+            h("h1", { style: "font-size:1.6rem;font-weight:900;margin-bottom:.4rem" }, e.name),
+            h("p", { class: "event-meta", style: "font-size:.95rem" }, "📅 " + e.date + "  📍 " + e.location)
+          ),
+          h("div", { class: "card-body" },
+            h("div", { style: "display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1rem" },
+              h("div", {},
+                h("div", { class: "text-muted", style: "font-size:.8rem" }, "BASE PRICE"),
+                h("div", { style: "font-size:1.5rem;font-weight:800;color:var(--primary)" }, "₹" + Number(e.basePrice).toLocaleString("en-IN"))
+              ),
+              h("div", {},
+                h("div", { class: "text-muted", style: "font-size:.8rem" }, "AVAILABLE SEATS"),
+                h("div", { style: "font-size:1.5rem;font-weight:800;color:var(--primary)" }, e.availableSeats + "/" + e.totalSeats)
+              )
+            ),
+            e.surgeMultiplier > 1.1 ? h("div", { class: "error-box", style: "margin-bottom:1rem" }, "⚡ Surge pricing active! Current price: ₹" + Number(e.currentPrice).toLocaleString("en-IN") + " (" + e.surgeMultiplier + "x)") : null,
+            low && !soldOut ? h("div", { class: "success-box", style: "margin-bottom:1rem" }, "🔥 Only " + e.availableSeats + " seats left — book fast!") : null,
+            soldOut ? h("div", { class: "error-box" }, "This event is sold out. You can join the waitlist.") : null,
+            h("button", { class: "btn btn-primary", onclick: () => openBookingDialog(e) }, soldOut ? "Join Waitlist" : "Book Now 🎟")
+          )
+        )
+      );
+    } catch (err) { wrap.replaceChildren(h("p", { class: "text-muted" }, errMsg(err))); }
+  });
+
+  // ── Booking dialog ────────────────────────────────────────
+  function openBookingDialog(ev) {
+    if (!Session.user) { go("/login"); return; }
+    if (Session.user.role === "ADMIN") { toast("Admin accounts cannot book tickets.", "error"); return; }
+
+    let selectedSeats = 1;
+    let selectedMethod = "UPI";
+    let quoteData = null;
+
+    const errBox  = h("div", { class: "error-box", style: "display:none" });
+    const summaryDiv = h("div", {});
+    const credLabel = h("label", {}, "UPI ID (e.g. name@bank)");
+    const credInput = h("input", { type: "text", placeholder: "name@bank", required: true });
+    const confirmBtn = h("button", { class: "btn btn-primary", style: "width:100%" }, "Confirm & Pay");
+
+    const payMethods = [
+      { id: "UPI", icon: "📲", label: "UPI" },
+      { id: "CARD", icon: "💳", label: "Card" },
+      { id: "NETBANKING", icon: "🏦", label: "Net Banking" }
+    ];
+
+    const payOptions = payMethods.map(pm => {
+      const opt = h("div", { class: "pay-option" + (pm.id === "UPI" ? " selected" : ""), onclick: () => {
+        payOptions.forEach(o => o.classList.remove("selected"));
+        opt.classList.add("selected");
+        selectedMethod = pm.id;
+        updateCredLabel();
+      }},
+        h("span", { class: "pay-icon" }, pm.icon),
+        h("span", { class: "pay-label" }, pm.label)
+      );
+      return opt;
+    });
+
+    function updateCredLabel() {
+      if (selectedMethod === "UPI") {
+        credLabel.textContent = "UPI ID (e.g. name@bank)";
+        credInput.placeholder = "name@bank";
+      } else if (selectedMethod === "CARD") {
+        credLabel.textContent = "Card Number (last 4 digits)";
+        credInput.placeholder = "1234";
+      } else {
+        credLabel.textContent = "Net Banking ID / Username";
+        credInput.placeholder = "Your bank login ID";
+      }
+    }
+
+    const seatInput = h("input", { type: "number", value: "1", min: "1", max: "10", style: "width:80px;padding:.4rem;border:1.5px solid var(--border);border-radius:6px;margin-left:.5rem" });
+    seatInput.addEventListener("change", async () => {
+      selectedSeats = parseInt(seatInput.value) || 1;
+      await refreshQuote();
+    });
+
+    async function refreshQuote() {
+      summaryDiv.replaceChildren(h("div", { class: "spinner", style: "margin:1rem auto;display:block" }));
+      try {
+        quoteData = await api("GET", "/events/" + ev.id + "/quote?seats=" + selectedSeats);
+        const waitlist = quoteData.waitlist;
+        summaryDiv.replaceChildren(
+          h("div", { class: "booking-summary" },
+            h("h4", {}, waitlist ? "⏳ Waitlist Summary" : "💰 Price Summary"),
+            h("div", { class: "price-row" }, h("span", { class: "muted" }, "Event"), h("span", {}, ev.name)),
+            h("div", { class: "price-row" }, h("span", { class: "muted" }, "Seats"), h("span", {}, selectedSeats)),
+            waitlist
+              ? h("div", { class: "price-row" }, h("span", { class: "muted" }, "Status"), h("span", { style: "color:var(--accent);font-weight:700" }, "Will be waitlisted"))
+              : h("div", { class: "price-row total" }, h("span", {}, "Total"), h("span", {}, "₹" + Number(quoteData.total).toLocaleString("en-IN")))
+          )
+        );
+        confirmBtn.textContent = waitlist ? "Join Waitlist" : "Confirm & Pay";
+      } catch (err) {
+        summaryDiv.replaceChildren(h("p", { class: "text-muted" }, errMsg(err)));
+      }
+    }
+
+    confirmBtn.addEventListener("click", async () => {
+      errBox.style.display = "none";
+      const credential = credInput.value.trim();
+      if (!credential) { errBox.textContent = "Please enter payment credential."; errBox.style.display = "block"; return; }
+      confirmBtn.disabled = true; confirmBtn.textContent = "Processing…";
+      try {
+        const result = await api("POST", "/bookings", {
+          eventId: ev.id,
+          seats: selectedSeats,
+          method: selectedMethod,
+          credential
+        });
+        $dlg.close();
+        showBookingSuccess(result, ev);
+      } catch (err) {
+        errBox.textContent = errMsg(err); errBox.style.display = "block";
+        confirmBtn.disabled = false; confirmBtn.textContent = quoteData?.waitlist ? "Join Waitlist" : "Confirm & Pay";
+      }
+    });
+
+    $dlg.replaceChildren(h("div", { class: "dlg-wrap" },
+      h("div", { class: "dlg-head" },
+        h("h2", { id: "dlg-title" }, "Book: " + ev.name),
+        h("button", { class: "dlg-close", onclick: () => $dlg.close() }, "✕")
+      ),
+      h("div", { class: "dlg-body" },
+        errBox,
+        h("div", { class: "form-group" },
+          h("label", {}, "Number of Seats"),
+          h("div", { style: "display:flex;align-items:center" }, seatInput)
+        ),
+        summaryDiv,
+        h("hr", { class: "dashed", style: "margin:1rem 0" }),
+        h("div", { class: "form-group" }, h("label", {}, "Payment Method"), h("div", { class: "pay-method" }, ...payOptions)),
+        h("div", { class: "form-group" }, credLabel, credInput),
+        confirmBtn
+      )
+    ));
+    $dlg.showModal();
+    refreshQuote();
+  }
+
+  function showBookingSuccess(result, ev) {
+    $app.innerHTML = "";
+    const waitlisted = result.waitlisted;
+    $app.append(h("div", { class: "wrap" },
+      h("div", { class: "success-page" },
+        h("div", { class: "success-icon" }, waitlisted ? "⏳" : "🎉"),
+        h("h1", {}, waitlisted ? "You're on the Waitlist!" : "Booking Confirmed!"),
+        h("p", { class: "text-muted" }, waitlisted
+          ? "We'll notify you if a seat becomes available."
+          : "Your tickets are booked. Show your Sentry Pass at the venue."),
+        h("div", { class: "success-ids" },
+          h("p", {}, "Booking ID: ", h("strong", {}, "#" + result.id)),
+          result.sentryPassId ? h("p", {}, "Sentry Pass: ", h("strong", {}, result.sentryPassId)) : null
+        ),
+        h("div", { class: "success-btns" },
+          h("button", { class: "btn btn-primary", onclick: () => go("/bookings") }, "📋 My Bookings"),
+          result.sentryPassId ? h("button", { class: "btn", onclick: () => go("/passes") }, "🎫 View Pass") : null,
+          h("button", { class: "btn btn-outline", style: "color:var(--primary)", onclick: () => go("/events") }, "Browse More")
+        )
+      )
+    ));
+  }
+
+  // ── My Bookings ───────────────────────────────────────────
+  route("/bookings", async () => {
+    if (!requireAuth()) return;
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "page-head" }, h("h1", {}, "My Bookings"), h("p", {}, "All your event bookings")));
+    wrap.append(loading());
+
+    try {
+      const bookings = await api("GET", "/bookings");
+      wrap.replaceChildren(h("div", { class: "page-head" }, h("h1", {}, "My Bookings"), h("p", {}, "All your event bookings")));
+      if (!bookings || bookings.length === 0) {
+        wrap.append(h("div", { class: "empty-state" },
+          h("span", { class: "empty-icon" }, "📋"),
+          h("h3", {}, "No bookings yet"),
+          h("p", {}, "Browse events and book your first ticket!"),
+          h("button", { class: "btn btn-primary mt", onclick: () => go("/events") }, "Browse Events")
+        ));
+        return;
+      }
+      const list = h("div", { style: "display:flex;flex-direction:column;gap:1rem" });
+      for (const b of bookings) {
+        const statusClass = b.status;
+        list.append(h("div", { class: "card" },
+          h("div", { class: "card-body" },
+            h("div", { style: "display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem" },
+              h("div", {},
+                h("div", { style: "font-weight:700;font-size:1rem" }, b.eventName),
+                h("div", { class: "text-muted", style: "font-size:.82rem;margin-top:.2rem" }, "📅 " + b.eventDate + "  📍 " + b.eventLocation)
+              ),
+              h("span", { class: "booking-card-status " + statusClass }, b.status)
+            ),
+            h("div", { style: "display:flex;gap:2rem;flex-wrap:wrap;margin-top:.75rem" },
+              h("div", {}, h("div", { class: "text-muted", style: "font-size:.75rem" }, "SEATS"), h("div", { style: "font-weight:700" }, b.seats)),
+              h("div", {}, h("div", { class: "text-muted", style: "font-size:.75rem" }, "PAID"), h("div", { style: "font-weight:700" }, "₹" + Number(b.pricePaid).toLocaleString("en-IN"))),
+              b.waitlistPosition ? h("div", {}, h("div", { class: "text-muted", style: "font-size:.75rem" }, "WAITLIST POS"), h("div", { style: "font-weight:700;color:var(--accent)" }, "#" + b.waitlistPosition)) : null
+            )
+          ),
+          h("div", { class: "card-foot" },
+            h("span", { class: "text-muted", style: "font-size:.78rem;flex:1" }, "Booking #" + b.id),
+            b.status === "CONFIRMED" ? h("button", { class: "btn btn-sm btn-danger", onclick: () => cancelBooking(b) }, "Cancel") : null,
+            b.status === "CONFIRMED" ? h("button", { class: "btn btn-sm", onclick: () => go("/passes") }, "🎫 Pass") : null
+          )
+        ));
+      }
+      wrap.append(list);
+    } catch (err) {
+      wrap.replaceChildren(h("p", { class: "text-muted" }, errMsg(err)));
+    }
+  });
+
+  async function cancelBooking(b) {
+    if (!confirm("Cancel booking #" + b.id + "? You will receive a refund of ₹" + Number(b.refundIfCancelled || 0).toLocaleString("en-IN") + ".")) return;
+    try {
+      const r = await api("POST", "/bookings/" + b.id + "/cancel");
+      toast("Booking cancelled. Refund: ₹" + Number(r.refund).toLocaleString("en-IN"), "success-t");
+      render();
+    } catch (err) { toast(errMsg(err), "error"); }
+  }
+
+  // ── My Passes ─────────────────────────────────────────────
+  route("/passes", async () => {
+    if (!requireAuth()) return;
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "page-head" }, h("h1", {}, "My Sentry Passes"), h("p", {}, "Your digital entry passes")));
+    wrap.append(loading());
+
+    try {
+      const passes = await api("GET", "/passes");
+      wrap.replaceChildren(h("div", { class: "page-head" }, h("h1", {}, "My Sentry Passes"), h("p", {}, "Your digital entry passes")));
+      if (!passes || passes.length === 0) {
+        wrap.append(h("div", { class: "empty-state" },
+          h("span", { class: "empty-icon" }, "🎫"),
+          h("h3", {}, "No passes yet"),
+          h("p", {}, "Book an event to get your Sentry Pass"),
+          h("button", { class: "btn btn-primary mt", onclick: () => go("/events") }, "Browse Events")
+        ));
+        return;
+      }
+      const list = h("div", { style: "display:flex;flex-direction:column;gap:1rem" });
+      for (const p of passes) {
+        const status = p.passStatus;
+        list.append(h("div", { class: "card pass-list-card " + status },
+          h("div", { class: "card-body" },
+            h("div", { style: "display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem" },
+              h("div", {},
+                h("div", { class: "pass-event" }, p.eventName),
+                h("div", { class: "pass-info" }, "📅 " + p.eventDate + "  📍 " + p.venue + "  💺 " + (p.seatNumbers || "–"))
+              ),
+              h("span", { class: "status-badge " + status }, status)
+            )
+          ),
+          h("div", { class: "card-foot" },
+            h("span", { class: "text-muted", style: "font-size:.78rem;flex:1" }, p.passId),
+            h("button", { class: "btn btn-sm btn-primary", onclick: () => showPassDetail(p) }, "View Pass 🎫")
+          )
+        ));
+      }
+      wrap.append(list);
+    } catch (err) { wrap.replaceChildren(h("p", { class: "text-muted" }, errMsg(err))); }
+  });
+
+  function showPassDetail(p) {
+    const status = p.passStatus;
+    $dlg.replaceChildren(h("div", { class: "dlg-wrap" },
+      h("div", { class: "dlg-head" },
+        h("h2", { id: "dlg-title" }, "🎫 Sentry Pass"),
+        h("button", { class: "dlg-close", onclick: () => $dlg.close() }, "✕")
+      ),
+      h("div", { class: "dlg-body", style: "padding:1rem" },
+        h("div", { class: "sentry-pass" },
+          h("div", { class: "sentry-pass-header" },
+            h("div", { class: "sentry-pass-brand" }, "SmartEvent · Digital Sentry Pass"),
+            h("div", { class: "sentry-pass-title" }, "SENTRY PASS"),
+            h("div", { class: "sentry-pass-event" }, p.eventName),
+            h("div", { class: "sentry-pass-meta-bar" }, p.eventDate + " · " + p.venue)
+          ),
+          h("div", { class: "sentry-pass-qr" },
+            h("div", { html: qrSvg(p.qrCode || p.passId) }),
+            h("div", { class: "qr-label" }, p.passId)
+          ),
+          h("div", { class: "sentry-pass-details" },
+            h("div", { class: "sentry-pass-detail" }, h("div", { class: "dt" }, "Holder"), h("div", { class: "dd" }, p.userName)),
+            h("div", { class: "sentry-pass-detail" }, h("div", { class: "dt" }, "Seats"), h("div", { class: "dd" }, p.seatNumbers || "–")),
+            h("div", { class: "sentry-pass-detail" }, h("div", { class: "dt" }, "Amount Paid"), h("div", { class: "dd" }, "₹" + Number(p.amountPaid).toLocaleString("en-IN"))),
+            h("div", { class: "sentry-pass-detail" }, h("div", { class: "dt" }, "Valid Until"), h("div", { class: "dd" }, p.validUntil ? p.validUntil.substring(0, 10) : "–"))
+          ),
+          h("div", { class: "sentry-pass-footer" },
+            h("span", { class: "status-badge " + status }, status),
+            p.checkedIn ? h("div", { class: "sentry-pass-hint" }, "✅ Checked in at " + (p.checkInTime ? p.checkInTime.substring(0, 16).replace("T", " ") : "–")) : null
+          )
+        )
+      ),
+      h("div", { class: "dlg-foot" },
+        h("button", { class: "btn", onclick: () => window.print() }, "🖨 Print"),
+        h("button", { class: "btn btn-primary", onclick: () => $dlg.close() }, "Close")
+      )
+    ));
+    $dlg.showModal();
+  }
+
+  // ── Admin: Dashboard ──────────────────────────────────────
+  route("/admin", async () => {
+    if (!requireAuth()) return;
+    if (Session.user.role !== "ADMIN") { go("/dashboard"); return; }
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "page-head" }, h("h1", {}, "Admin Dashboard"), h("p", {}, "System overview")));
+    wrap.append(loading());
+
+    try {
+      const data = await api("GET", "/admin/analytics");
+      wrap.replaceChildren(h("div", { class: "page-head" }, h("h1", {}, "Admin Dashboard"), h("p", {}, "System overview")));
+      const stats = [
+        ["Total Revenue", "₹" + Number(data.totalRevenue).toLocaleString("en-IN"), "Today: ₹" + Number(data.revenueToday).toLocaleString("en-IN")],
+        ["Confirmed Bookings", data.confirmedBookings, "Cancelled: " + data.cancelledBookings],
+        ["Waitlisted", data.waitlistedBookings, ""],
+        ["Customers", data.customers, ""],
+        ["Active Passes", data.activeSentryPasses, "Checked-In: " + data.checkedInUsers],
+        ["Cancellation Rate", data.cancellationRate + "%", ""],
+        ["Most Popular", data.mostPopularEvent || "–", ""]
+      ];
+      wrap.append(h("div", { class: "grid grid-4", style: "margin-bottom:2rem" },
+        ...stats.map(([label, value, sub]) => h("div", { class: "stat-card" },
+          h("div", { class: "label" }, label),
+          h("div", { class: "value" }, String(value)),
+          sub ? h("div", { class: "sub" }, sub) : null
+        ))
+      ));
+      wrap.append(
+        h("div", { class: "section-title" }, "Quick Admin Actions"),
+        h("div", { class: "quick-actions" },
+          ...[ ["/admin/events", "📅", "Manage Events"], ["/admin/analytics", "📊", "Analytics"], ["/admin/checkin", "✅", "Check-In"] ]
+            .map(([path, icon, label]) => h("button", { class: "quick-action-btn", onclick: () => go(path) },
+              h("span", { class: "qa-icon" }, icon), h("span", { class: "qa-label" }, label)
+            ))
+        )
+      );
+    } catch (err) { wrap.replaceChildren(h("p", { class: "text-muted" }, errMsg(err))); }
+  });
+
+  // ── Admin: Events ─────────────────────────────────────────
+  route("/admin/events", async () => {
+    if (!requireAuth()) return;
+    if (Session.user.role !== "ADMIN") { go("/dashboard"); return; }
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(
+      h("div", { style: "display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem" },
+        h("div", { class: "page-head", style: "margin-bottom:0" }, h("h1", {}, "Manage Events")),
+        h("button", { class: "btn btn-primary", onclick: () => openEventDialog(null, refreshList) }, "+ Add Event")
+      )
+    );
+    const listDiv = h("div", {}, loading());
+    wrap.append(listDiv);
+
+    async function refreshList() {
+      listDiv.replaceChildren(loading());
+      try {
+        const events = await api("GET", "/admin/events");
+        listDiv.replaceChildren();
+        if (!events || events.length === 0) { listDiv.append(h("p", { class: "text-muted" }, "No events found.")); return; }
+        const table = h("div", { class: "card" },
+          h("table", { class: "analytics-table" },
+            h("thead", {}, h("tr", {},
+              h("th", {}, "Name"), h("th", {}, "Category"), h("th", {}, "Date"), h("th", {}, "Location"),
+              h("th", {}, "Price"), h("th", {}, "Seats"), h("th", {}, "Actions")
+            )),
+            h("tbody", {}, ...events.map(e => h("tr", {},
+              h("td", {}, h("strong", {}, e.name)),
+              h("td", {}, e.category),
+              h("td", {}, e.date),
+              h("td", {}, e.location),
+              h("td", {}, "₹" + Number(e.basePrice).toLocaleString("en-IN")),
+              h("td", {}, e.availableSeats + "/" + e.totalSeats),
+              h("td", {},
+                h("button", { class: "btn btn-sm", style: "margin-right:.4rem", onclick: () => openEventDialog(e, refreshList) }, "Edit"),
+                h("button", { class: "btn btn-sm btn-danger", onclick: async () => {
+                  if (!confirm("Delete event '" + e.name + "'?")) return;
+                  try { await api("DELETE", "/admin/events/" + e.id); toast("Event deleted", "success-t"); refreshList(); }
+                  catch (err) { toast(errMsg(err), "error"); }
+                }}, "Delete")
+              )
+            )))
+          )
+        );
+        listDiv.append(table);
+      } catch (err) { listDiv.replaceChildren(h("p", { class: "text-muted" }, errMsg(err))); }
+    }
+    refreshList();
+  });
+
+  function openEventDialog(ev, onDone) {
+    const isEdit = !!ev;
+    const errBox = h("div", { class: "error-box", style: "display:none" });
+    const fields = {
+      name:      h("input", { type: "text",   value: ev?.name     || "", required: true }),
+      category:  (() => {
+        const s = h("select", { required: true });
+        for (const c of ["Music", "Sports", "Tech", "Comedy", "Dance", "Art", "Fitness", "Food", "Kids", "Other"])
+          s.append(h("option", { value: c, selected: ev?.category === c }, c));
+        return s;
+      })(),
+      location:  h("input", { type: "text",   value: ev?.location || "", required: true }),
+      date:      h("input", { type: "date",   value: ev?.date     || "", required: true }),
+      basePrice: h("input", { type: "number", value: ev?.basePrice || "", min: "1", required: true }),
+      totalSeats: h("input", { type: "number", value: ev?.totalSeats || "", min: "1", required: !isEdit })
+    };
+    const submitBtn = h("button", { class: "btn btn-primary", style: "width:100%" }, isEdit ? "Save Changes" : "Create Event");
+    submitBtn.addEventListener("click", async () => {
+      errBox.style.display = "none";
+      const payload = {
+        name: fields.name.value.trim(),
+        category: fields.category.value,
+        location: fields.location.value.trim(),
+        date: fields.date.value,
+        basePrice: fields.basePrice.value,
+        totalSeats: fields.totalSeats.value
+      };
+      submitBtn.disabled = true; submitBtn.textContent = "Saving…";
+      try {
+        if (isEdit) await api("PUT", "/admin/events/" + ev.id, payload);
+        else await api("POST", "/admin/events", payload);
+        $dlg.close();
+        toast(isEdit ? "Event updated!" : "Event created!", "success-t");
+        if (onDone) onDone();
+      } catch (err) {
+        errBox.textContent = errMsg(err); errBox.style.display = "block";
+        submitBtn.disabled = false; submitBtn.textContent = isEdit ? "Save Changes" : "Create Event";
+      }
+    });
+
+    $dlg.replaceChildren(h("div", { class: "dlg-wrap" },
+      h("div", { class: "dlg-head" },
+        h("h2", { id: "dlg-title" }, isEdit ? "Edit Event" : "Add Event"),
+        h("button", { class: "dlg-close", onclick: () => $dlg.close() }, "✕")
+      ),
+      h("div", { class: "dlg-body" },
+        errBox,
+        h("div", { class: "form-group" }, h("label", {}, "Event Name"), fields.name),
+        h("div", { class: "form-row" },
+          h("div", { class: "form-group" }, h("label", {}, "Category"), fields.category),
+          h("div", { class: "form-group" }, h("label", {}, "Location"), fields.location)
+        ),
+        h("div", { class: "form-row" },
+          h("div", { class: "form-group" }, h("label", {}, "Date"), fields.date),
+          h("div", { class: "form-group" }, h("label", {}, "Base Price (₹)"), fields.basePrice)
+        ),
+        !isEdit ? h("div", { class: "form-group" }, h("label", {}, "Total Seats"), fields.totalSeats) : null,
+        submitBtn
+      )
+    ));
+    $dlg.showModal();
+  }
+
+  // ── Admin: Analytics ──────────────────────────────────────
+  route("/admin/analytics", async () => {
+    if (!requireAuth()) return;
+    if (Session.user.role !== "ADMIN") { go("/dashboard"); return; }
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "page-head" }, h("h1", {}, "Analytics"), h("p", {}, "Revenue and booking insights")));
+    wrap.append(loading());
+
+    try {
+      const data = await api("GET", "/admin/analytics");
+      wrap.replaceChildren(h("div", { class: "page-head" }, h("h1", {}, "Analytics"), h("p", {}, "Revenue and booking insights")));
+
+      wrap.append(h("div", { class: "grid grid-4", style: "margin-bottom:2rem" },
+        ...[ ["Total Revenue", "₹" + Number(data.totalRevenue).toLocaleString("en-IN")],
+             ["Today's Revenue", "₹" + Number(data.revenueToday).toLocaleString("en-IN")],
+             ["Cancellation Rate", data.cancellationRate + "%"],
+             ["Most Popular Event", data.mostPopularEvent || "–"],
+             ["Active Sentry Passes", data.activeSentryPasses],
+             ["Checked-In Users", data.checkedInUsers] ]
+          .map(([label, value]) => h("div", { class: "stat-card" },
+            h("div", { class: "label" }, label),
+            h("div", { class: "value", style: "font-size:1.3rem" }, String(value))
+          ))
+      ));
+
+      if (data.events && data.events.length > 0) {
+        const maxRev = Math.max(...data.events.map(e => e.revenue), 1);
+        wrap.append(
+          h("div", { class: "section-title" }, "Event Breakdown"),
+          h("div", { class: "card" },
+            h("table", { class: "analytics-table" },
+              h("thead", {}, h("tr", {},
+                h("th", {}, "Event"), h("th", {}, "Sold"), h("th", {}, "Total"), h("th", {}, "Occupancy"), h("th", {}, "Revenue")
+              )),
+              h("tbody", {}, ...data.events.map(e =>
+                h("tr", {},
+                  h("td", {}, h("strong", {}, e.name)),
+                  h("td", {}, e.sold),
+                  h("td", {}, e.total),
+                  h("td", {},
+                    e.occupancy + "%",
+                    h("div", { class: "progress-bar" }, h("div", { class: "progress-fill", style: "width:" + e.occupancy + "%" }))
+                  ),
+                  h("td", {}, "₹" + Number(e.revenue).toLocaleString("en-IN"))
+                )
+              ))
+            )
+          )
+        );
+      }
+    } catch (err) { wrap.replaceChildren(h("p", { class: "text-muted" }, errMsg(err))); }
+  });
+
+  // ── Admin: Check-In ───────────────────────────────────────
+  route("/admin/checkin", () => {
+    if (!requireAuth()) return;
+    if (Session.user.role !== "ADMIN") { go("/dashboard"); return; }
+    const wrap = h("div", { class: "wrap" });
+    $app.append(wrap);
+    wrap.append(h("div", { class: "page-head" }, h("h1", {}, "Sentry Gate Check-In"), h("p", {}, "Scan or enter a Sentry Pass ID to admit attendees")));
+
+    const errBox   = h("div", { class: "error-box", style: "display:none" });
+    const passInput = h("input", { type: "text", placeholder: "e.g. SP-2026-ABCDEF", style: "width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem" });
+    const checkBtn  = h("button", { class: "btn btn-primary", style: "width:100%;margin-top:.75rem" }, "✅ Check In");
+    const resultDiv = h("div", { class: "checkin-result" });
+
+    checkBtn.addEventListener("click", async () => {
+      const passId = passInput.value.trim();
+      if (!passId) { errBox.textContent = "Please enter a Pass ID."; errBox.style.display = "block"; return; }
+      errBox.style.display = "none";
+      checkBtn.disabled = true; checkBtn.textContent = "Checking…";
+      resultDiv.className = "checkin-result";
+      resultDiv.replaceChildren();
+      try {
+        const pass = await api("POST", "/admin/checkin", { passId });
+        resultDiv.classList.add("show", "approved");
+        resultDiv.replaceChildren(
+          h("div", { class: "checkin-icon" }, "✅"),
+          h("div", { class: "checkin-verdict" }, "ENTRY APPROVED"),
+          h("div", { class: "checkin-detail" },
+            h("div", {}, "👤 " + pass.userName),
+            h("div", {}, "🎟 " + pass.eventName),
+            h("div", {}, "📅 " + pass.eventDate + " · " + pass.venue),
+            h("div", {}, "💺 Seats: " + (pass.seatNumbers || "–"))
+          )
+        );
+        passInput.value = "";
+      } catch (err) {
+        resultDiv.classList.add("show", "denied");
+        resultDiv.replaceChildren(
+          h("div", { class: "checkin-icon" }, "❌"),
+          h("div", { class: "checkin-verdict" }, "ENTRY DENIED"),
+          h("div", { class: "checkin-detail" }, errMsg(err))
+        );
+      }
+      checkBtn.disabled = false; checkBtn.textContent = "✅ Check In";
+    });
+
+    passInput.addEventListener("keydown", e => { if (e.key === "Enter") checkBtn.click(); });
+
+    wrap.append(h("div", { class: "checkin-box" },
+      h("div", { class: "card" },
+        h("div", { class: "card-body" },
+          errBox,
+          h("div", { class: "form-group" }, h("label", {}, "Sentry Pass ID"), passInput),
+          checkBtn
+        )
+      ),
+      resultDiv
+    ));
+  });
+
+})();
+</script>
+</body>
+</html>

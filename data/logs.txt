@@ -1,0 +1,19 @@
+[2026-10-05T17:46:38.015586300] Locked 1 seat(s) for event 5 (user 1002) for 120s
+[2026-10-05T17:46:42.934759400] Locked 1 seat(s) for event 5 (user 1002) for 120s
+[2026-10-05T17:46:53.742748200] Locked 1 seat(s) for event 5 (user 1002) for 120s
+[2026-10-05T17:46:53.783975500] Booking #5000 confirmed for user 1002
+[2026-10-05T17:50:03.049395800] Booking #5000 cancelled. Refund: Rs.210.0
+[2026-10-06T23:41:51.250278400] ENTRY_DENIED: Pass not found 
+[2026-10-06T23:41:51.269843900] ENTRY_DENIED: Pass not found 
+[2026-10-06T23:44:56.709238800] Locked 2 seat(s) for event 7 (user 1005) for 120s
+[2026-10-06T23:44:56.745238] Booking #5001 confirmed for user 1005
+[2026-10-06T23:44:56.807490400] SENTRY_PASS_GENERATED: SP-2026-0D5C43 for Booking 5001
+[2026-10-06T23:44:56.913855800] ENTRY_APPROVED: SP-2026-0D5C43
+[2026-10-06T23:44:56.927262700] ENTRY_DENIED: Duplicate check-in SP-2026-0D5C43
+[2026-10-06T23:54:09.370095500] Locked 1 seat(s) for event 13 (user 1006) for 120s
+[2026-10-06T23:54:12.193420300] Locked 1 seat(s) for event 13 (user 1006) for 120s
+[2026-10-06T23:54:22.776237500] Locked 1 seat(s) for event 13 (user 1006) for 120s
+[2026-10-06T23:54:39.538482300] Locked 1 seat(s) for event 13 (user 1006) for 120s
+[2026-10-06T23:54:47.888527800] Locked 1 seat(s) for event 13 (user 1006) for 120s
+[2026-10-06T23:54:47.923133200] Booking #5002 confirmed for user 1006
+[2026-10-06T23:54:47.931056] SENTRY_PASS_GENERATED: SP-2026-BAC460 for Booking 5002
